@@ -1,0 +1,112 @@
+openapi: 3.0.3
+info:
+  title: Swagger Microservice
+  description: |-
+    This is a microservice demo, it uses the Marvel API to retrieve data about characters!
+  contact:
+    email: javier.roen@gmail.com
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080/v1/marvel
+tags:
+  - name: characters
+    description: Everything about your Marvel characters
+    externalDocs:
+      description: Find out more
+      url: https://developer.marvel.com/
+  
+paths:
+  /characters:
+    get:
+      tags:
+        - characters
+      summary: Find all the available Marvel characters
+      description: Multiple query params can be added as offset and limit
+      operationId: findCharacterList
+      parameters:
+        - name: offset
+          in: query
+          description: Offset value
+          required: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Offset value
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Character'          
+        '400':
+          description: Invalid offset or limit value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /charaters/{characterId}:
+    get:
+      tags:
+        - characters
+      summary: Finds Marvel character by ID
+      description: Find a character by ID.
+      operationId: findCharacterById
+      parameters:
+        - name: characterId
+          in: path
+          description: Character Id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Character'          
+        '400':
+          description: Invalid ID value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Character:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1009144
+        name:
+          type: string
+          example: A.I.M.
+        description:
+          type: string
+          example: AIM is a terrorist organization bent on destroying the world.
+        resourceURI:
+          type: string
+          example: http://gateway.marvel.com/v1/public/characters/1009144
+    Error:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: null
+        name:
+          type: string
+          example: null
+        description:
+          type: string
+          example: Not Found
+        resourceURI:
+          type: string
+          example: null

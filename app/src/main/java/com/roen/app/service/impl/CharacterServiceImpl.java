@@ -20,14 +20,13 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public ResponseEntity<List<MarvelCharacter>> getCharacters(int offset, int limit) {
-        List<MarvelCharacter> characterList = new ArrayList<>();
         ResponseEntity<MarvelCharacterResponse> response = marvelClient.getCharacterList(offset, limit);
 
         if (response.getBody() != null && response.getBody().getData() != null) {
-            characterList.addAll(response.getBody().getData().getResults());
+            return new ResponseEntity<>(response.getBody().getData().getResults(), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(characterList, HttpStatus.OK);
+        return new ResponseEntity<>(List.of(new MarvelCharacter("Not Found")), HttpStatus.OK);
     }
 
     @Override
